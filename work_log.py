@@ -8,7 +8,7 @@ import peewee
 db = peewee.SqliteDatabase('entries.db')
 
 FIELDNAMES = ['ID','Name', 'Minutes Spent', 'Date', 'Notes']
-DATA_ID_FORMAT = '%Y%m%d%H%M%S%f'
+TIMESTAMP_FORMAT = "%m-%d-%Y"
 
 class Entry(peewee.Model):
     #title
@@ -16,9 +16,10 @@ class Entry(peewee.Model):
     #time spent (in minutes)
     time_spent = peewee.IntegerField(default=0)
     #date that is auto generated at creation
-    date = peewee.DateTimeField(default=datetime.datetime.now)
+    date = peewee.DateTimeField()
     #optional notes
     notes = peewee.TextField()
+    employee = peewee.CharField(max_length=255)
 
     class Meta:
         database = db
@@ -58,10 +59,13 @@ def new_entry():
     clear_screen()
     task = {}
     task['Name'] = input('What is the name of your task? ')
+    task['Employee'] = input("What is the employee's name that worked on this task? ")
     task['Minutes Spent'] = input('How many minutes total did you spend on this task? ')
     if input('Would you like to add notes for this task? ').lower() == 'y':
         task['Notes'] = input('Please type your notes: ')
-    Entry.create(title=task['Name'], time_spent=task['Minutes Spent'], notes=task['Notes'])
+    task['Timestamp'] = datetime.datetime.now().strftime(TIMESTAMP_FORMAT)
+    Entry.create(title=task['Name'], time_spent=task['Minutes Spent'], date=task['Timestamp'],
+                 notes=task['Notes'], employee=task['Employee'])
     clear_screen()
     input('Task saved! Please hit any key to return to the main menu')
     display_menu()
@@ -77,7 +81,7 @@ def search_for_entry():
     D -> Search by date
     T -> Search by time spent
     N -> Search by task name
-    P -> Search by Regex pattern
+    P -> Search by employee name
 
     M -> Return to main menu
     ''').lower().strip()
@@ -95,18 +99,18 @@ def search_for_entry():
 
 
 def search_by_date():
-    """Allows user to search for tasks by a date
-    NEED TO UPDATE TO WORK WITH DATABASE!"""
+    """
+    Allows user to search for tasks by a date
+    """
     clear_screen()
     results = []
     date_given= input("Please enter the date you want to search for tasks from. Please"
           "use the format MM-DD-YYYY ")
     if re.search(r'\d{2}-\d{2}-\d{4}', date_given):
-        with open('entries.csv') as csvfile:
-            csv_dict = csv.DictReader(csvfile)
-            for entry in csv_dict:
-                if date_given in entry['Date']:
-                    results.append(entry)
+        entries = Entry.select().where(Entry.date == date_given)
+        for entry in entries:
+            results.append(entry)
+        print("I found {} entries for that date".format(len(results)))
     else:
         print("Sorry, that's not a date I recognize. Please try again.")
         search_by_date()
@@ -121,18 +125,17 @@ def search_by_date():
 
 
 def search_by_time_spent():
-    """Allows user to search for tasks by number of minutes spent on
-    task. NEED TO UPDATE TO WORK WITH DATABASE!"""
+    """
+    Allows user to search for tasks by number of minutes spent on task.
+    """
     clear_screen()
     results = []
     time_given = input("Search for tasks that took how many minutes? Please"
-                       "convert all time to minutes > ")
+                       " convert all time to minutes > ")
     if re.search(r'\d+', time_given):
-        with open('entries.csv') as csvfile:
-            csv_dict = csv.DictReader(csvfile)
-            for entry in csv_dict:
-                if time_given in entry['Minutes Spent']:
-                    results.append(entry)
+        entries = Entry.select().where(Entry.time_spent == time_given)
+        for entry in entries:
+            results.append(entry)
     else:
         print("Sorry, that's not a valid entry. Please try again.")
         search_by_time_spent()
@@ -147,16 +150,17 @@ def search_by_time_spent():
 
 
 def search_exact():
-    """Allows user to search by the exact name of the task. NEED TO UPDATE TO WORK WITH DATABASE!"""
+    """Allows user to search by the exact name of the task."""
     clear_screen()
     results = []
-    text = input("Please enter part or the full name of a task to search for > ")
+    text = input("Please enter part or the full name of a task to search for. Task notes will also be searched > ")
     if text:
-        with open('entries.csv') as csvfile:
-            csv_dict = csv.DictReader(csvfile)
-            for entry in csv_dict:
-                if text in entry['Name']:
-                    results.append(entry)
+        entries = Entry.select().where(Entry.title.contains(text))
+        entries_notes = Entry.select().where(Entry.notes.contains(text))
+        for entry in entries:
+            results.append(entry)
+        for entry in entries_notes:
+            results.append(entry)
     else:
         print("Sorry, you didn't enter anything. Please try again.")
         search_exact()
@@ -171,17 +175,14 @@ def search_exact():
 
 
 def search_by_pattern():
-    """Allows user to provide a RegEx pattern to search for tasks. NEED TO UPDATE TO WORK WITH DATABASE!"""
+    """Allows user to provide a RegEx pattern to search for tasks."""
     clear_screen()
     results = []
-    pattern = input("Please enter the regex pattern you wish to search with > ")
-    compile_pattern = re.compile(r''+pattern)
-    if pattern:
-        with open('entries.csv') as csvfile:
-            csv_dict = csv.DictReader(csvfile)
-            for entry in csv_dict:
-                if pattern.findall(entry):
-                    results.append(entry)
+    name = input("Please enter the employee name you wish to search for > ")
+    if name:
+        entries = Entry.select().where(Entry.employee.contains(name))
+        for entry in entries:
+            results.append(entry)
     else:
         clear_screen()
         input("Sorry, that wasn't a valid entry. Press any key to try again")
@@ -199,11 +200,11 @@ def search_by_pattern():
 def display_entry(entry):
     """Displays one entry"""
     print("*" * 50)
-    print("Date and time: {}".format(entry['Date']))
-    print("Task name: {}".format(entry['Name']))
-    print("Minutes spent: {}".format(entry['Minutes Spent']))
-    if entry['Notes']:
-        print("Notes: {}".format(entry['Notes']))
+    print("Date and time: {}".format(entry.date))
+    print("Task name: {}".format(entry.title))
+    print("Minutes spent: {}".format(entry.time_spent))
+    if entry.notes:
+        print("Notes: {}".format(entry.notes))
     print("*" * 50)
 
 
@@ -229,6 +230,7 @@ def display_entries(entries):
             edit_entry(entry)
         elif choice == "d":
             delete_entry(entry)
+            count += 1
         elif choice == "p":
             count -= 1
         elif choice == "s":
@@ -244,13 +246,14 @@ def display_entries(entries):
 
 
 def delete_entry(entry):
-    """Removes a specified entry from the CSV file"""
-    print("You reached the delete entry section. This feature is under construction.")
+    """Removes a specified entry from the database"""
+    Entry.delete_instance(entry)
+    print("You sucessfully deleted the entry")
 
 
 def edit_entry(entry):
     """Allows user to change any field of a passed in entry"""
-    print("You reached the edit entry section. This feature is under construction")
+    pass
 
 
 
