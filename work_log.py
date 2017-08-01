@@ -93,7 +93,7 @@ def search_for_entry():
     elif choice == "n":
         search_exact()
     elif choice == "p":
-        search_by_pattern()
+        search_by_employee()
     else:
         display_menu()
 
@@ -174,11 +174,14 @@ def search_exact():
         search_for_entry()
 
 
-def search_by_pattern():
+def search_by_employee(search=None):
     """Allows user to provide a RegEx pattern to search for tasks."""
     clear_screen()
     results = []
-    name = input("Please enter the employee name you wish to search for > ")
+    if search = None:
+        name = input("Please enter the employee name you wish to search for > ")
+    else:
+        name = search
     if name:
         entries = Entry.select().where(Entry.employee.contains(name))
         for entry in entries:
@@ -186,7 +189,7 @@ def search_by_pattern():
     else:
         clear_screen()
         input("Sorry, that wasn't a valid entry. Press any key to try again")
-        search_by_pattern()
+        search_by_employee()
     if results:
         display_entries(results)
         input("That's all I could find. Press any key to return to the search menu")
