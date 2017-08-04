@@ -30,20 +30,22 @@ def run_program():
     db.connect()
     db.create_tables([Entry], safe=True)
 
-def display_menu():
+def display_menu(test_choice=None):
     clear_screen()
     print("What would you like to do? ")
-    choice = input("""Chose one of the following: \n
+    print("""Chose one of the following: \n
     N -> Make a new entry \n
     S -> Search for an entry \n
     Q -> Quit\n
-    -> """).lower().strip()
-    if choice == 's':
-        search_for_entry()
-    elif choice == 'q':
-        sys.exit()
-    else:
-        new_entry()
+    """)
+    if test_choice==None:
+        choice = input("-> ").lower().strip()
+        if choice == 's':
+            search_for_entry()
+        elif choice == 'q':
+            sys.exit()
+        else:
+            new_entry()
 
 
 def clear_screen():
@@ -53,22 +55,24 @@ def clear_screen():
         os.system('clear')
 
 
-def new_entry():
-    """Make a new entry in the CSV file. New entry must include
+def new_entry(task=None):
+    """Make a new entry in the database. New entry must include
     [Name], [Minutes Spent], [Date], and [Notes]"""
     clear_screen()
-    task = {}
-    task['Name'] = input('What is the name of your task? ')
-    task['Employee'] = input("What is the employee's name that worked on this task? ")
-    task['Minutes Spent'] = input('How many minutes total did you spend on this task? ')
-    if input('Would you like to add notes for this task? ').lower() == 'y':
-        task['Notes'] = input('Please type your notes: ')
+    if task == None:
+        task = {}
+        task['Name'] = input('What is the name of your task? ')
+        task['Employee'] = input("What is the employee's name that worked on this task? ")
+        task['Minutes Spent'] = input('How many minutes total did you spend on this task? ')
+        if input('Would you like to add notes for this task? ').lower() == 'y':
+            task['Notes'] = input('Please type your notes: ')
     task['Timestamp'] = datetime.datetime.now().strftime(TIMESTAMP_FORMAT)
     Entry.create(title=task['Name'], time_spent=task['Minutes Spent'], date=task['Timestamp'],
                  notes=task['Notes'], employee=task['Employee'])
     clear_screen()
-    input('Task saved! Please hit any key to return to the main menu')
-    display_menu()
+    if task == None:
+        input('Task saved! Please hit any key to return to the main menu')
+        display_menu()
 
 
 def search_for_entry():
@@ -178,7 +182,7 @@ def search_by_employee(search=None):
     """Allows user to provide a RegEx pattern to search for tasks."""
     clear_screen()
     results = []
-    if search = None:
+    if search == None:
         name = input("Please enter the employee name you wish to search for > ")
     else:
         name = search
