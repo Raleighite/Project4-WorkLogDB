@@ -32,19 +32,21 @@ def run_program():
 
 def display_menu():
     clear_screen()
+    choice = None
     print("What would you like to do? ")
     print("""Chose one of the following: \n
     N -> Make a new entry \n
     S -> Search for an entry \n
     Q -> Quit\n
     """)
-    choice = input("-> ").lower().strip()
-    if choice == 's':
-        search_for_entry()
-    elif choice == 'q':
-        sys.exit()
-    else:
-        new_entry()
+    while choice != 'q':
+        choice = input("-> ").lower().strip()
+        if choice == 's':
+            search_for_entry()
+        elif choice == 'q':
+            break
+        else:
+            new_entry()
 
 
 def clear_screen():
