@@ -30,7 +30,7 @@ def run_program():
     db.connect()
     db.create_tables([Entry], safe=True)
 
-def display_menu(test_choice=None):
+def display_menu():
     clear_screen()
     print("What would you like to do? ")
     print("""Chose one of the following: \n
@@ -38,14 +38,13 @@ def display_menu(test_choice=None):
     S -> Search for an entry \n
     Q -> Quit\n
     """)
-    if test_choice==None:
-        choice = input("-> ").lower().strip()
-        if choice == 's':
-            search_for_entry()
-        elif choice == 'q':
-            sys.exit()
-        else:
-            new_entry()
+    choice = input("-> ").lower().strip()
+    if choice == 's':
+        search_for_entry()
+    elif choice == 'q':
+        sys.exit()
+    else:
+        new_entry()
 
 
 def clear_screen():
