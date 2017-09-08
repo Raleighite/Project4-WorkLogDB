@@ -31,9 +31,10 @@ class MenuTests(unittest.TestCase):
     @mock.patch('work_log.search_by_employee')
     def test_search_menu(self, employee_mock, exact_mock, time_mock,
                          date_mock):
-        answers = (answer for answer in ['d', 't', 'n', 'p'])
+        answers = ['p', 'n', 't', 'd']
         def mock_input(prompt):
-            return next(answers)
+            for answer in answers:
+                yield answer
         with mock.patch('builtins.input', mock_input):
             work_log.search_for_entry()
         self.assertTrue(employee_mock.called)

@@ -84,7 +84,7 @@ def search_for_entry():
     options include searching by [Date], [Time Spent], [Exact Search]
     and [Regex Pattern]"""
     clear_screen()
-    choice = input('''
+    print('''
     How would you like to search?
     D -> Search by date
     T -> Search by time spent
@@ -92,8 +92,8 @@ def search_for_entry():
     P -> Search by employee name
 
     M -> Return to main menu
-    ''').lower().strip()
-
+    ''')
+    choice = input("-> ").lower().strip()
     if choice == "d":
         search_by_date()
     elif choice == "t":
