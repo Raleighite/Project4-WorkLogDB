@@ -5,7 +5,8 @@ import re
 
 import peewee
 
-db = peewee.SqliteDatabase('entries.db')
+#db = peewee.SqliteDatabase('entries.db')
+db = None
 
 FIELDNAMES = ['ID','Name', 'Minutes Spent', 'Date', 'Notes']
 TIMESTAMP_FORMAT = "%m-%d-%Y"
@@ -18,15 +19,16 @@ class Entry(peewee.Model):
     #date that is auto generated at creation
     date = peewee.DateTimeField()
     #optional notes
-    notes = peewee.TextField()
+    notes = peewee.TextField(null=True)
     employee = peewee.CharField(max_length=255)
 
     class Meta:
         database = db
 
 
-def run_program():
+def run_program(db_name='entries.db'):
     """Create the database if it doesn't already exist"""
+    db = peewee.SqliteDatabase(db_name)
     db.connect()
     db.create_tables([Entry], safe=True)
 
@@ -65,6 +67,7 @@ def new_entry(task=None):
         task['Name'] = input('What is the name of your task? ')
         task['Employee'] = input("What is the employee's name that worked on this task? ")
         task['Minutes Spent'] = input('How many minutes total did you spend on this task? ')
+        task['Notes'] = None
         if input('Would you like to add notes for this task? ').lower() == 'y':
             task['Notes'] = input('Please type your notes: ')
     task['Timestamp'] = datetime.datetime.now().strftime(TIMESTAMP_FORMAT)

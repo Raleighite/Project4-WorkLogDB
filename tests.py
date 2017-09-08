@@ -15,34 +15,33 @@ class MenuTests(unittest.TestCase):
         self.assertRaises(SystemExit, work_log.display_menu())
 
     @mock.patch('work_log.new_entry')
-    def test_menu_called_new(self, add_mock):
-        with mock.patch('builtins.input', return_value='n'):
-            self.assertTrue(work_log.new_entry)
+    @mock.patch('work_log.search_for_entry')
+    def test_menu_called_new(self, search_mock, add_mock):
+        answers = (answer for answer in ['n', 's', 'q'])
+        def mock_input(prompt):
+            return next(answers)
+        with mock.patch('builtins.input', mock_input):
+            work_log.display_menu()
+        self.assertTrue(add_mock.called)
+        self.assertTrue(search_mock.called)
 
-    @mock.patch('builtins.input', return_value='s')
-    def test_menu_search(self, mock_input):
-        self.assertRaises(work_log.search_for_entry(),
-                          work_log.display_menu())
+    @mock.patch('work_log.search_by_date')
+    @mock.patch('work_log.search_by_time_spent')
+    @mock.patch('work_log.search_exact')
+    @mock.patch('work_log.search_by_employee')
+    def test_search_menu(self, employee_mock, exact_mock, time_mock,
+                         date_mock):
+        answers = (answer for answer in ['d', 't', 'n', 'p'])
+        def mock_input(prompt):
+            return next(answers)
+        with mock.patch('builtins.input', mock_input):
+            work_log.search_for_entry()
+        self.assertTrue(employee_mock.called)
+        self.assertTrue(exact_mock.called)
+        self.assertTrue(time_mock.called)
+        self.assertTrue(date_mock.called)
 
-    @mock.patch('builtins.input', return_value='d')
-    def test_search_date(self, mock_input):
-        self.assertRaises(work_log.search_by_date(),
-                          work_log.search_for_entry())
-
-    @mock.patch('builtins.input', return_value='t')
-    def test_search_time_spent(self, mock_input):
-        self.assertRaises(work_log.search_by_time_spent(),
-                          work_log.search_for_entry())
-
-    @mock.patch('builtins.input', return_value='n')
-    def test_search_exact(self, mock_input):
-        self.assertRaises(work_log.search_exact(),
-                          work_log.search_for_entry())
-
-    @mock.patch('builtins.input', return_value='p')
-    def test_search_by_employee(self, mock_input):
-        self.assertRaises(work_log.search_by_employee(),
-                          work_log.search_for_entry())
 
 if __name__ == '__main__':
+    work_log.run_program('test.db')
     unittest.main()
