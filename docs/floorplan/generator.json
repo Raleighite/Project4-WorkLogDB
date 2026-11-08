@@ -1,0 +1,7 @@
+{
+  "floorplan_commit": "70be3f40f9c2e061290b76027f180d9ff892edd6",
+  "export_mode": "offline flows,notes",
+  "mapping_source": "original Git blob extraction; explicit development/test omissions recorded",
+  "runtime_shipped_here": false,
+  "regeneration": "Requires a separately qualified Floorplan runtime. This directory ships the offline map, reviewed authoring and integrity checks, not a turnkey generator."
+}

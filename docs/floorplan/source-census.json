@@ -1,0 +1,50 @@
+{
+  "source_commit": "0f4f14fd4acaa252ed4ca6a5e87a64ca2bafcd25",
+  "tracked_regular_files": [
+    {
+      "path": ".coveragerc",
+      "mode": "100644",
+      "bytes": 46
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "bytes": 1157
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "bytes": 1545
+    },
+    {
+      "path": "tests.py",
+      "mode": "100644",
+      "bytes": 1577
+    },
+    {
+      "path": "work_log.py",
+      "mode": "100644",
+      "bytes": 8627
+    }
+  ],
+  "admission_omissions": [
+    {
+      "path": ".coveragerc",
+      "mode": "100644",
+      "bytes": 46
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "bytes": 1157
+    },
+    {
+      "path": "tests.py",
+      "bytes": 1577,
+      "reason": "development test only; mock.patch falsely scanned as HTTP PATCH. All application implementation remains admitted."
+    }
+  ],
+  "application_code_coverage": "All application Python/JS/CSS/HTML source admitted; input CSV data and dependency/development metadata are explicit outside boundaries.",
+  "route_review": "No HTTP router in CLI source.",
+  "original_license_unchanged": true
+}

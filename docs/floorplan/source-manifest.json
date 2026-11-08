@@ -1,0 +1,38 @@
+{
+  "schema": "floorplan/source-manifest@1",
+  "repository": "Raleighite/Project4-WorkLogDB",
+  "source_commit": "0f4f14fd4acaa252ed4ca6a5e87a64ca2bafcd25",
+  "mapping_source": "original bytes; no credential derivative",
+  "source_policy": "See checker selected(): application Python/JS/HTML/CSS and actual config/static/template/input classes, excluding docs/policy/tests/dependencies/caches.",
+  "source_files": {
+    "work_log.py": "9eefebef854e7f0be92b7d15baf0ef409c38e51cbb826589332ddc2626ca5442"
+  },
+  "admitted_snapshot": {
+    "work_log.py": "9eefebef854e7f0be92b7d15baf0ef409c38e51cbb826589332ddc2626ca5442",
+    "README.md": "01f9ee4bb546abf027c95d64e03bcb90f2b26b7d61f937f7109cae86e8470947"
+  },
+  "counts": {
+    "files": 2,
+    "codeFiles": 1,
+    "routes": 0,
+    "modules": 4,
+    "unassigned": 0,
+    "flows": 1,
+    "tour": 3
+  },
+  "artifacts": {
+    "check_freshness.py": "1ae338eb0a8e6d9f96994b72b93dc07022f221c412ab55b264bc0105c6e164a3",
+    "generator.json": "04edcc596cf52a21813e117f01c84aac12d29cfe100ac81d10bf0f153efc349b",
+    "source-census.json": "98229fa09898ddfa0f106e6e237c3e949ba558c331e320b0ab6a77881c7dffc2",
+    "architecture.json": "aa42d5486c1cc3ed5b680dd58576fdf80733baa58a7b78b6d36b08ed09bab828",
+    "NOTICE.md": "1b961d21b4feedd4af9be96ea51dd05d1f7cf45304ab4fe88d95ba0cebeada2f",
+    "index.html": "a5533cb813f8cf060cc6c3c835e36ba58f3b1096534effdfff490109f76f3c10",
+    "README.md": "103297a148390aac50b471d8c5c22a47d6d00a0dfb824b2adb4c41e5df3cefd5",
+    "descriptions/reviewed.json": "1af0f1483f7e082112919cd6977814f31a772e5a0b78de93e14a376baef65a88",
+    "tests/test_freshness.py": "94a5f53967231f5a9f5228de7a8dc9811f4bf2dc8459c8e24781430bf64c30f7",
+    "licenses/inter-LICENSE.txt": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
+    "licenses/elkjs-LICENSE.md": "89591d4578fb1ebd91501312a3d25f021bd865a2e436641c1cf7b1bc7e3c1617",
+    "licenses/LICENSE": "65a06a9dab105cd5a2b713a41a020a442bd431e6e19631182ed3889fd1672faf",
+    "licenses/jetbrains-mono-LICENSE.txt": "403581b69dac5cff4079205e01c6b467e56af449ecbd7247693ddb1baafa005b"
+  }
+}

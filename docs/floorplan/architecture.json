@@ -1,0 +1,124 @@
+{
+  "$schema": "floorplan/architecture@1",
+  "audience": "everyone",
+  "project": {
+    "name": "Project4-WorkLogDB",
+    "summary": "An unfinished Peewee-backed terminal work log defines entry creation, filtering, result paging and deletion. Database binding is incomplete; no HTTP routes.",
+    "entrypoints": [
+      "work_log.py"
+    ]
+  },
+  "include": [
+    "code",
+    "config",
+    "data",
+    "docs",
+    "other"
+  ],
+  "nodes": [
+    {
+      "id": "capture",
+      "label": "Terminal capture",
+      "summary": "The menus collect employee, title, minutes and optional notes.",
+      "paths": [
+        "work_log.py"
+      ],
+      "kind": "service"
+    },
+    {
+      "id": "queries",
+      "label": "Entry filters and results",
+      "summary": "Functions select by date, minutes, title/notes or employee substring, then page entries.",
+      "paths": [
+        "work_log.py"
+      ],
+      "kind": "service"
+    },
+    {
+      "id": "db",
+      "label": "Intended SQLite storage",
+      "summary": "Entry declares Peewee fields, but Meta.database is None and run_program only assigns a local db variable.",
+      "paths": [],
+      "kind": "external"
+    },
+    {
+      "id": "reference",
+      "label": "Project reference and license",
+      "summary": "Original course documentation and any upstream license remain separate from executable processing.",
+      "paths": [
+        "README.md"
+      ],
+      "kind": "service"
+    }
+  ],
+  "edges": [
+    {
+      "from": "capture",
+      "to": "db",
+      "label": "Entry.create attempts persistence",
+      "kind": "data"
+    },
+    {
+      "from": "db",
+      "to": "queries",
+      "label": "If model binding were fixed, search functions would select and display entries.",
+      "kind": "data"
+    },
+    {
+      "from": "queries",
+      "to": "db",
+      "label": "Delete calls delete_instance",
+      "kind": "data"
+    }
+  ],
+  "flows": [
+    {
+      "id": "main",
+      "title": "Intended task path and binding blocker",
+      "steps": [
+        {
+          "node": "capture",
+          "note": "Intended path: choose a new task and collect terminal fields."
+        },
+        {
+          "node": "db",
+          "note": "Entry.create attempts persistence; current model binding is a known blocker."
+        },
+        {
+          "node": "queries",
+          "note": "If model binding were fixed, search functions would select and display entries."
+        },
+        {
+          "node": "db",
+          "note": "Delete calls delete_instance; edit_entry is only pass."
+        }
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "node": "capture",
+      "title": "Terminal capture",
+      "note": "The menus collect employee, title, minutes and optional notes."
+    },
+    {
+      "node": "queries",
+      "title": "Entry filters and results",
+      "note": "Functions select by date, minutes, title/notes or employee substring, then page entries."
+    },
+    {
+      "node": "db",
+      "title": "Intended SQLite storage",
+      "note": "Entry declares Peewee fields, but Meta.database is None and run_program only assigns a local db variable."
+    }
+  ],
+  "annotations": [
+    {
+      "path": "work_log.py",
+      "note": "Execution is not qualified: Entry remains bound to None, editing is a stub, and title/notes matches can duplicate results. tests.py is development-only and omitted from the mapping input because mock.patch decorators are falsely interpreted as HTTP PATCH routes by the generic scanner; no application code was omitted.",
+      "tags": [
+        "hotspot"
+      ]
+    }
+  ]
+}

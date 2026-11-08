@@ -27,3 +27,7 @@ presented with entries with that employee as their creator.
 
 As a fellow developer, I should find at least 50% of the code covered by tests. I would use coverage.py
 to validate this amount of coverage.
+
+## Architecture map
+
+Download and open the [offline Floorplan](docs/floorplan/index.html), or read the [map guide](docs/floorplan/README.md). The map follows actual source processing and documents unfinished features; it is not application runtime verification.
