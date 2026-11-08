@@ -1,0 +1,13 @@
+{
+  "files": {
+    "work_log.py": {
+      "name": "Unfinished database work log",
+      "description": "Defines Peewee Entry fields, terminal menus, creation, filters and paging. Entry.Meta.database is assigned None; run_program creates a local SqliteDatabase without binding the model. Delete is implemented, edit_entry is pass. These are source flows, not a successful runtime claim."
+    },
+    "README.md": {
+      "name": "Database exercise requirements",
+      "description": "Describes intended employee/date/time/term search and coverage expectations, not verified runtime acceptance."
+    }
+  },
+  "routes": {}
+}
